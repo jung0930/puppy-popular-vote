@@ -46,17 +46,17 @@ subprojects {
 
 project(':vote-api') {
     dependencies {
-        compileOnly project(':vote-common')
+        compileOnly project(':vote-core')
     }
 }
 
-project(':vote-backend') {
+project(':vote-stream') {
     dependencies {
-        compileOnly project(':vote-common')
+        compileOnly project(':vote-core')
     }
 }
 
-project(':vote-common') {
+project(':vote-core') {
     bootJar { enabled = false }
     jar { enabled = true }
 }
