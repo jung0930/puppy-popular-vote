@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
-    // id "io.spring.dependency-management" version "1.1.0"
 }
 
 repositories {
@@ -32,11 +31,21 @@ subprojects {
 
     // 관리하는 모듈의 공통 dependencies
     dependencies {
+        // spring boot
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-devtools'
+
+        // db
+        runtimeOnly 'com.h2database:h2:1.4.200'
+
+        // lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
-        testImplementation platform('org.junit:junit-bom:5.9.1')
-        testImplementation 'org.junit.jupiter:junit-jupiter'
+
+        // test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//        testImplementation platform('org.junit:junit-bom:5.9.1')
+//        testImplementation 'org.junit.jupiter:junit-jupiter'
     }
 
     test {
