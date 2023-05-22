@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.deepdive.vote.domain.code.VoteStatus;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"puppy"})
 @Entity
 @Table(name = "vote_info")
 public class VoteInfo extends BaseEntity {
