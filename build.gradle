@@ -53,19 +53,19 @@ subprojects {
     }
 }
 
-project(':vote-api') {
+project(':ppv-api') {
     dependencies {
-        compileOnly project(':vote-core')
+        compileOnly project(':ppv-core')
     }
 }
 
-project(':vote-stream') {
+project(':ppv-stream') {
     dependencies {
-        compileOnly project(':vote-core')
+        compileOnly project(':ppv-core')
     }
 }
 
-project(':vote-core') {
+project(':ppv-core') {
     bootJar { enabled = false }
     jar { enabled = true }
 }
