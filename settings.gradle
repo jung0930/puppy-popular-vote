@@ -1,0 +1,4 @@
+rootProject.name = 'puppy-popular-vote'
+include 'ppv-core'
+include 'ppv-api'
+include 'ppv-stream'

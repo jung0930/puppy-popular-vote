@@ -3,7 +3,7 @@ package com.deepdive.puppypopularvote.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.deepdive.puppypopularvote.domain.code.VoteStatus;
+import com.deepdive.puppypopularvote.code.VoteStatus;
 import lombok.ToString;
 
 import javax.persistence.*;

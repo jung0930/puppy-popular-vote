@@ -2,7 +2,7 @@ package com.deepdive.puppypopularvote.entity;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import com.deepdive.puppypopularvote.domain.code.Sex;
+import com.deepdive.puppypopularvote.code.Sex;
 
 import javax.persistence.*;
 import java.util.ArrayList;
