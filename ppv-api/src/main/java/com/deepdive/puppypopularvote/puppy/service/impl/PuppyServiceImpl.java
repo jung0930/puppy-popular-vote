@@ -1,11 +1,11 @@
-package com.deepdive.puppypopularvote.domain.puppy.service.impl;
+package com.deepdive.puppypopularvote.puppy.service.impl;
 
 import com.deepdive.puppypopularvote.code.Sex;
-import com.deepdive.puppypopularvote.domain.puppy.dto.PuppyDto;
 import com.deepdive.puppypopularvote.entity.Puppy;
-import com.deepdive.puppypopularvote.domain.puppy.repository.PuppyRepository;
-import com.deepdive.puppypopularvote.domain.puppy.service.PuppyService;
 import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
+import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
+import com.deepdive.puppypopularvote.puppy.service.PuppyService;
+import com.deepdive.puppypopularvote.repository.PuppyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class PuppyServiceImpl implements PuppyService {
                         .summaryDescription("강아지1 간단한 소개글")
                         .photoFileName("강아지1.jpg")
                         .voteCount(0)
-                .build());
+                        .build());
         puppyRepository.save(
                 Puppy
                         .builder(
@@ -94,7 +94,6 @@ public class PuppyServiceImpl implements PuppyService {
                         .photoFileName("강아지5.jpg")
                         .voteCount(0)
                         .build());
-
 
 
         puppyRepository.save(

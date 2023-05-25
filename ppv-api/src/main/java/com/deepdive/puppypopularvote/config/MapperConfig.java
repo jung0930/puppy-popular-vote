@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.global.config;
+package com.deepdive.puppypopularvote.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

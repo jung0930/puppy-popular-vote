@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.domain.puppy.dto;
+package com.deepdive.puppypopularvote.puppy.dto;
 
 
 import com.deepdive.puppypopularvote.code.Sex;
@@ -6,8 +6,18 @@ import lombok.*;
 
 import java.util.List;
 
-// @RequiredArgsConstructor
 public class PuppyDto {
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class ListRequest {
+        private int page;
+        private int size;
+
+        // private String sort;
+    }
 
     @Getter
     @Setter
@@ -38,6 +48,15 @@ public class PuppyDto {
         private String summaryDescription;
         private Sex sex;
         private Integer voteCount;
+
+        public Detail(Long id, String name, String photoFileName, String summaryDescription, Sex sex, Integer voteCount) {
+            this.id = id;
+            this.name = name;
+            this.photoFileName = photoFileName;
+            this.summaryDescription = summaryDescription;
+            this.sex = sex;
+            this.voteCount = voteCount;
+        }
     }
 
 }

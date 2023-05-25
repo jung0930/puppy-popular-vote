@@ -1,6 +1,6 @@
-package com.deepdive.puppypopularvote.domain.puppy.service;
+package com.deepdive.puppypopularvote.puppy.service;
 
-import com.deepdive.puppypopularvote.domain.puppy.dto.PuppyDto;
+import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
 
 public interface PuppyService {
 
