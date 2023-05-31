@@ -1,3 +1,5 @@
 .gradle
 gradle
 .idea
+ppv-api/build
+ppv-core/build

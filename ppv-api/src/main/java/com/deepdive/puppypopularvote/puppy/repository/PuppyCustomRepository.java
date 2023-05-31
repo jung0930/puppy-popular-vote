@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.repository;
+package com.deepdive.puppypopularvote.puppy.repository;
 
 import com.deepdive.puppypopularvote.entity.Puppy;
 

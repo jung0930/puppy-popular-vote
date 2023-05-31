@@ -12,17 +12,17 @@ public class ResultResponse {
     private Object data;
 
 
-    private ResultResponse(ResultCode resultCode, Object data) {
+    private ResultResponse(final ResultCode resultCode, final Object data) {
         this.status = resultCode.getHttpStatus().value();
         this.message = resultCode.getMessage();
         this.data = data;
     }
 
-    public static ResultResponse of(ResultCode resultCode, Object data) {
+    public static ResultResponse of(final ResultCode resultCode, final Object data) {
         return new ResultResponse(resultCode, data);
     }
 
-    public static ResponseEntity<ResultResponse> toResponseEntity(final Object data, final ResultCode resultCode){
+    public static ResponseEntity<ResultResponse> toResponseEntity(final Object data, final ResultCode resultCode) {
         return ResponseEntity
                 .status(resultCode.getHttpStatus())
                 .body(

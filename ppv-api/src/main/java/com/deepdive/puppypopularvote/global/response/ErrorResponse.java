@@ -24,7 +24,7 @@ public class ErrorResponse {
         return new ErrorResponse(code);
     }
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(final ErrorCode errorCode){
+    public static ResponseEntity<ErrorResponse> toResponseEntity(final ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(

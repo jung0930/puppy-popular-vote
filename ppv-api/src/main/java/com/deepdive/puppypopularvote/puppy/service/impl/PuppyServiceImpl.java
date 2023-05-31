@@ -4,14 +4,13 @@ import com.deepdive.puppypopularvote.code.Sex;
 import com.deepdive.puppypopularvote.entity.Puppy;
 import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
+import com.deepdive.puppypopularvote.puppy.repository.PuppyRepository;
 import com.deepdive.puppypopularvote.puppy.service.PuppyService;
-import com.deepdive.puppypopularvote.repository.PuppyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,14 +20,12 @@ public class PuppyServiceImpl implements PuppyService {
     private final ModelMapper modelMapper;
 
     @Override
-    public PuppyDto.ListResponse findPuppies() {
-        List<Puppy> puppies = puppyRepository.findAllBy().get();
+    public PuppyDto.ListResponse findPuppies(Pageable pageable) {
+        Page<Puppy> puppies = puppyRepository.findAll(pageable);
 
-        List<PuppyDto.Detail> puppyDtos = puppies.stream()
-                .map(puppy -> modelMapper.map(puppy, PuppyDto.Detail.class))
-                .collect(Collectors.toList());
+        Page<PuppyDto.Detail> puppyDtos = puppies.map(puppy -> modelMapper.map(puppy, PuppyDto.Detail.class));
 
-        return new PuppyDto.ListResponse(puppyDtos);
+        return PuppyDto.ListResponse.of(puppyDtos);
     }
 
     @Override
