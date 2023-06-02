@@ -28,4 +28,10 @@ public class PuppyController {
         return ResultResponse.toResponseEntity(puppyService.findPuppyById(id), ResultCode.PUPPY_DETAIL_FIND_SUCCESS);
     }
 
+    @GetMapping(value = "/puppies/insert")
+    public ResponseEntity insert() {
+        puppyService.createPuppys();
+        return null;
+    }
+
 }

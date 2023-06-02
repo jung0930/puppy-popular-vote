@@ -1,26 +1,31 @@
 package com.deepdive.puppypopularvote.puppy.service.impl;
 
 import com.deepdive.puppypopularvote.code.Sex;
-import com.deepdive.puppypopularvote.entity.Puppy;
+import com.deepdive.puppypopularvote.domain.db.Puppy;
+import com.deepdive.puppypopularvote.domain.redis.RedisPuppyDetail;
 import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
-import com.deepdive.puppypopularvote.puppy.repository.PuppyRepository;
+import com.deepdive.puppypopularvote.puppy.repository.db.PuppyRepository;
+import com.deepdive.puppypopularvote.puppy.repository.redis.RedisPuppyDetailRepository;
 import com.deepdive.puppypopularvote.puppy.service.PuppyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class PuppyServiceImpl implements PuppyService {
 
     private final PuppyRepository puppyRepository;
+    private final RedisPuppyDetailRepository redisPuppyDetailRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public PuppyDto.ListResponse findPuppies(Pageable pageable) {
+    @Transactional(readOnly = true)
+    public PuppyDto.ListResponse findPuppies(final Pageable pageable) {
         Page<Puppy> puppies = puppyRepository.findAll(pageable);
 
         Page<PuppyDto.Detail> puppyDtos = puppies.map(puppy -> modelMapper.map(puppy, PuppyDto.Detail.class));
@@ -29,13 +34,36 @@ public class PuppyServiceImpl implements PuppyService {
     }
 
     @Override
-    public PuppyDto.DetailResponse findPuppyById(Long id) {
+    @Transactional
+    public PuppyDto.DetailResponse findPuppyById(final Long id) {
+        if (hasPuppyInRedisCache(id)) {
+            return modelMapper.map(redisPuppyDetailRepository.findById(id), PuppyDto.DetailResponse.class);
+        }
+
         Puppy puppy = puppyRepository.findById(id)
                 .orElseThrow(() -> new PuppyNotFoundException());
 
-        PuppyDto.DetailResponse puppyDto = modelMapper.map(puppy, PuppyDto.DetailResponse.class);
+        savePuppyToRedisCache(puppy);
 
-        return puppyDto;
+        return modelMapper.map(puppy, PuppyDto.DetailResponse.class);
+    }
+
+    private boolean hasPuppyInRedisCache(final Long id) {
+        return redisPuppyDetailRepository.findById(id).isPresent();
+    }
+
+    private void savePuppyToRedisCache(final Puppy puppy) {
+        RedisPuppyDetail redisPuppyDetail = RedisPuppyDetail.builder()
+                .id(puppy.getId())
+                .name(puppy.getName())
+                .photoFileName(puppy.getPhotoFileName())
+                .summaryDescription(puppy.getSummaryDescription())
+                .detailDescription(puppy.getDetailDescription())
+                .sex(puppy.getSex())
+                .voteCount(puppy.getVoteCount())
+                .build();
+
+        redisPuppyDetailRepository.save(redisPuppyDetail);
     }
 
 

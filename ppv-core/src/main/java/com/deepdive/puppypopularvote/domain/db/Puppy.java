@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.entity;
+package com.deepdive.puppypopularvote.domain.db;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

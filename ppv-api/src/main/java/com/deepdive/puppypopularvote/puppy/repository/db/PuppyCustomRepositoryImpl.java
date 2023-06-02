@@ -1,6 +1,6 @@
-package com.deepdive.puppypopularvote.puppy.repository;
+package com.deepdive.puppypopularvote.puppy.repository.db;
 
-import com.deepdive.puppypopularvote.entity.Puppy;
+import com.deepdive.puppypopularvote.domain.db.Puppy;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

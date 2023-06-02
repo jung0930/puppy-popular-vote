@@ -14,14 +14,14 @@ public class GlobalExceptionHandler {
 
     // 비즈니스 요구사항에 따른 Exception
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+    protected ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
         log.error("Exception: ", e);
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
     // 그 밖에 발생하는 모든 예외처리가 이곳으로 모인다.
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+    protected ResponseEntity<ErrorResponse> handleException(final Exception e) {
         log.error("Exception: ", e);
         return ErrorResponse.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
     }
