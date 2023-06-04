@@ -1,14 +1,14 @@
 package com.deepdive.puppypopularvote.puppy.controller;
 
+import com.deepdive.puppypopularvote.code.VoteStatus;
 import com.deepdive.puppypopularvote.global.code.ResultCode;
 import com.deepdive.puppypopularvote.global.response.ResultResponse;
+import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
 import com.deepdive.puppypopularvote.puppy.service.PuppyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +27,20 @@ public class PuppyController {
     public ResponseEntity findPuppy(@PathVariable("id") final Long id) {
         return ResultResponse.toResponseEntity(puppyService.findPuppyById(id), ResultCode.PUPPY_DETAIL_FIND_SUCCESS);
     }
+
+    @PostMapping(value = "/puppies/vote")
+    public ResponseEntity vote(
+            @RequestBody final PuppyDto.VoteRequest voteRequest
+            /*@RequestBody final Long id, @RequestBody final VoteStatus voteStatus*/
+    ) {
+        puppyService.vote(voteRequest.getId(), voteRequest.getVoteStatus());
+
+        return null;
+    }
+
+
+
+
 
     @GetMapping(value = "/puppies/insert")
     public ResponseEntity insert() {

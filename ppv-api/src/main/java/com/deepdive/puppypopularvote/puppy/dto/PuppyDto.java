@@ -2,12 +2,31 @@ package com.deepdive.puppypopularvote.puppy.dto;
 
 
 import com.deepdive.puppypopularvote.code.Sex;
+import com.deepdive.puppypopularvote.code.VoteStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 public class PuppyDto {
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class VoteRequest {
+        private Long id;
+        private VoteStatus voteStatus;
+
+        private VoteRequest(final Long id, final VoteStatus voteStatus) {
+            this.id = id;
+            this.voteStatus = voteStatus;
+        }
+
+        public static VoteRequest of (final Long id, final VoteStatus voteStatus) {
+            return new VoteRequest(id, voteStatus);
+        }
+
+    }
 
     @Getter
     @Setter

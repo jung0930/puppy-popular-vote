@@ -1,9 +1,12 @@
 package com.deepdive.puppypopularvote.puppy.service.impl;
 
 import com.deepdive.puppypopularvote.code.Sex;
+import com.deepdive.puppypopularvote.code.VoteStatus;
 import com.deepdive.puppypopularvote.domain.db.Puppy;
+import com.deepdive.puppypopularvote.domain.kafka.VoteTopic;
 import com.deepdive.puppypopularvote.domain.redis.RedisPuppyDetail;
 import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
+import com.deepdive.puppypopularvote.global.kafka.KafkaVoteProduceCallback;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
 import com.deepdive.puppypopularvote.puppy.repository.db.PuppyRepository;
 import com.deepdive.puppypopularvote.puppy.repository.redis.RedisPuppyDetailRepository;
@@ -12,16 +15,23 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.concurrent.ListenableFuture;
 
 @RequiredArgsConstructor
 @Service
 public class PuppyServiceImpl implements PuppyService {
 
+    private final static String KAFKA_TOPIC_VOTE = "vote";
+
     private final PuppyRepository puppyRepository;
     private final RedisPuppyDetailRepository redisPuppyDetailRepository;
     private final ModelMapper modelMapper;
+    private final KafkaTemplate<String, VoteTopic> kafkaTemplate;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,6 +56,13 @@ public class PuppyServiceImpl implements PuppyService {
         savePuppyToRedisCache(puppy);
 
         return modelMapper.map(puppy, PuppyDto.DetailResponse.class);
+    }
+
+    @Override
+    @Async
+    public void vote(Long id, VoteStatus voteStatus) {
+        ListenableFuture<SendResult<String, VoteTopic>> future = kafkaTemplate.send(KAFKA_TOPIC_VOTE, VoteTopic.of(id, voteStatus));
+        future.addCallback(new KafkaVoteProduceCallback());
     }
 
     private boolean hasPuppyInRedisCache(final Long id) {

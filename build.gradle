@@ -40,6 +40,9 @@ subprojects {
         // db
         runtimeOnly('com.h2database:h2:1.4.200')
 
+        // kafka
+        implementation('org.springframework.kafka:spring-kafka:2.9.9')
+
         // lombok
         compileOnly('org.projectlombok:lombok')
         annotationProcessor('org.projectlombok:lombok')
