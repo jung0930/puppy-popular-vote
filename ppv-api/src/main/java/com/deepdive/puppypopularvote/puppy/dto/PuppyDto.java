@@ -22,7 +22,7 @@ public class PuppyDto {
             this.voteStatus = voteStatus;
         }
 
-        public static VoteRequest of (final Long id, final VoteStatus voteStatus) {
+        public static VoteRequest of(final Long id, final VoteStatus voteStatus) {
             return new VoteRequest(id, voteStatus);
         }
 

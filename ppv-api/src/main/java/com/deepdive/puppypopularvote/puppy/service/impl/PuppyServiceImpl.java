@@ -5,8 +5,8 @@ import com.deepdive.puppypopularvote.code.VoteStatus;
 import com.deepdive.puppypopularvote.domain.db.Puppy;
 import com.deepdive.puppypopularvote.domain.kafka.VoteTopic;
 import com.deepdive.puppypopularvote.domain.redis.RedisPuppyDetail;
+import com.deepdive.puppypopularvote.global.error.exception.KafkaVoteProduceFailException;
 import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
-import com.deepdive.puppypopularvote.global.kafka.KafkaVoteProduceCallback;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
 import com.deepdive.puppypopularvote.puppy.repository.db.PuppyRepository;
 import com.deepdive.puppypopularvote.puppy.repository.redis.RedisPuppyDetailRepository;
@@ -22,11 +22,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 @RequiredArgsConstructor
 @Service
 public class PuppyServiceImpl implements PuppyService {
 
     private final static String KAFKA_TOPIC_VOTE = "vote";
+    private final static long KAFKA_TIMEOUT_SECONDS = 5;
 
     private final PuppyRepository puppyRepository;
     private final RedisPuppyDetailRepository redisPuppyDetailRepository;
@@ -61,8 +66,18 @@ public class PuppyServiceImpl implements PuppyService {
     @Override
     @Async
     public void vote(Long id, VoteStatus voteStatus) {
-        ListenableFuture<SendResult<String, VoteTopic>> future = kafkaTemplate.send(KAFKA_TOPIC_VOTE, VoteTopic.of(id, voteStatus));
-        future.addCallback(new KafkaVoteProduceCallback());
+        ListenableFuture<SendResult<String, VoteTopic>> kafkaFuture = kafkaTemplate.send(KAFKA_TOPIC_VOTE, VoteTopic.of(id, voteStatus));
+
+        // Todo : exception 별로 별도 처리. Log 등
+        try {
+            kafkaFuture.get(KAFKA_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new KafkaVoteProduceFailException();
+        } catch (ExecutionException e) {
+            throw new KafkaVoteProduceFailException();
+        } catch (TimeoutException e) {
+            throw new KafkaVoteProduceFailException();
+        }
     }
 
     private boolean hasPuppyInRedisCache(final Long id) {
@@ -82,7 +97,6 @@ public class PuppyServiceImpl implements PuppyService {
 
         redisPuppyDetailRepository.save(redisPuppyDetail);
     }
-
 
     @Override
     public void createPuppys() {

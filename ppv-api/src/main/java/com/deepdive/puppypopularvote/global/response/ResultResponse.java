@@ -18,8 +18,26 @@ public class ResultResponse {
         this.data = data;
     }
 
+    private ResultResponse(final ResultCode resultCode) {
+        this.status = resultCode.getHttpStatus().value();
+        this.message = resultCode.getMessage();
+        this.data = "";
+    }
+
+    public static ResultResponse of(final ResultCode resultCode) {
+        return new ResultResponse(resultCode);
+    }
+
     public static ResultResponse of(final ResultCode resultCode, final Object data) {
         return new ResultResponse(resultCode, data);
+    }
+
+    public static ResponseEntity<ResultResponse> toResponseEntity(final ResultCode resultCode) {
+        return ResponseEntity
+                .status(resultCode.getHttpStatus())
+                .body(
+                        ResultResponse.of(resultCode)
+                );
     }
 
     public static ResponseEntity<ResultResponse> toResponseEntity(final Object data, final ResultCode resultCode) {

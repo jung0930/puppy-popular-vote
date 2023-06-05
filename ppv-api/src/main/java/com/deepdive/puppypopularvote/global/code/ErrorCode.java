@@ -16,8 +16,7 @@ public enum ErrorCode {
 
     // Kafka
     KAFKA_VOTE_PRODUCE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "투표 메시지 생성에 실패했습니다."),
-    KAFKA_VOTE_CONSUMER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "투표 메시지 소비에 실패했습니다.")
-    ;
+    KAFKA_VOTE_CONSUMER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "투표 메시지 소비에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

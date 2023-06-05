@@ -1,6 +1,5 @@
 package com.deepdive.puppypopularvote.puppy.controller;
 
-import com.deepdive.puppypopularvote.code.VoteStatus;
 import com.deepdive.puppypopularvote.global.code.ResultCode;
 import com.deepdive.puppypopularvote.global.response.ResultResponse;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
@@ -19,7 +18,7 @@ public class PuppyController {
     // http://localhost:8081/puppies?size=10&page=10&sort=id,desc
     // Page request [number: 10, size 10, sort: id: DESC]
     @GetMapping(value = "/puppies")
-    public ResponseEntity findPuppies(final Pageable pageable) {
+    public ResponseEntity findPuppies(final Pageable pageable) { // Todo : request dto 로 반환받기
         return ResultResponse.toResponseEntity(puppyService.findPuppies(pageable), ResultCode.PUPPY_LIST_FIND_SUCCESS);
     }
 
@@ -29,17 +28,11 @@ public class PuppyController {
     }
 
     @PostMapping(value = "/puppies/vote")
-    public ResponseEntity vote(
-            @RequestBody final PuppyDto.VoteRequest voteRequest
-            /*@RequestBody final Long id, @RequestBody final VoteStatus voteStatus*/
-    ) {
+    public ResponseEntity vote(@RequestBody final PuppyDto.VoteRequest voteRequest) {
         puppyService.vote(voteRequest.getId(), voteRequest.getVoteStatus());
 
-        return null;
+        return ResultResponse.toResponseEntity(ResultCode.PUPPY_VOTE_SUCCESS);
     }
-
-
-
 
 
     @GetMapping(value = "/puppies/insert")

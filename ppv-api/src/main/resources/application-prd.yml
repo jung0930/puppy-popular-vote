@@ -11,12 +11,17 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+
   jpa:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
     hibernate:
-    #ddl-auto: update
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

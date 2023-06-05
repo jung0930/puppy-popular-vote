@@ -13,22 +13,15 @@ spring:
       port: 6379
 
   kafka:
-    bootstrap-servers: localhost:9092
-  #    producer:
-#      # producer bootstrap servers가 따로 존재하면 설정
-#      # bootstrap-servers: 3.34.97.97:9092
-#
-#      # 데이터를 보낼 때, key/value를 직렬화
-#      # JSON 데이터를 보낼 것이라면 JsonDeserializer
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.apache.kafka.common.serialization.JsonDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
 
   jpa:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
     hibernate:
-      #ddl-auto: update
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
