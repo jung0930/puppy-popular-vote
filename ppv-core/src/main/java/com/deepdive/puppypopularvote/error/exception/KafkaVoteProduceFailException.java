@@ -1,6 +1,6 @@
-package com.deepdive.puppypopularvote.global.error.exception;
+package com.deepdive.puppypopularvote.error.exception;
 
-import com.deepdive.puppypopularvote.global.code.ErrorCode;
+import com.deepdive.puppypopularvote.error.ErrorCode;
 
 public class KafkaVoteProduceFailException extends BusinessException {
 

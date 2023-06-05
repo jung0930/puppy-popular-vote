@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8091
 
 spring:
   datasource:
@@ -13,8 +13,13 @@ spring:
       port: 6379
 
   kafka:
-    producer:
+    consumer:
       bootstrap-servers: localhost:9092
+      group-id: vote
+      auto-offset-reset: latest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
 
   jpa:
     database: h2

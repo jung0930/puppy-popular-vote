@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.puppy.repository.redis;
+package com.deepdive.puppypopularvote.repository.redis;
 
 import com.deepdive.puppypopularvote.domain.redis.RedisPuppyDetail;
 import org.springframework.data.repository.CrudRepository;

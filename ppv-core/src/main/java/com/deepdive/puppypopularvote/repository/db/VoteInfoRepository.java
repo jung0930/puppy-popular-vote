@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.puppy.repository.db;
+package com.deepdive.puppypopularvote.repository.db;
 
 import com.deepdive.puppypopularvote.domain.db.VoteInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

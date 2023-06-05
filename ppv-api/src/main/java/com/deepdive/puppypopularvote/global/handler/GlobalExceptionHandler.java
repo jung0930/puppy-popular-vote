@@ -1,7 +1,7 @@
-package com.deepdive.puppypopularvote.global.error;
+package com.deepdive.puppypopularvote.global.handler;
 
-import com.deepdive.puppypopularvote.global.code.ErrorCode;
-import com.deepdive.puppypopularvote.global.error.exception.BusinessException;
+import com.deepdive.puppypopularvote.error.ErrorCode;
+import com.deepdive.puppypopularvote.error.exception.BusinessException;
 import com.deepdive.puppypopularvote.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

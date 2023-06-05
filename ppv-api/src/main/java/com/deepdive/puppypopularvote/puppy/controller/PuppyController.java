@@ -29,8 +29,21 @@ public class PuppyController {
 
     @PostMapping(value = "/puppies/vote")
     public ResponseEntity vote(@RequestBody final PuppyDto.VoteRequest voteRequest) {
+        System.out.println("voteRequest.toString() : " + voteRequest.toString());
+        System.out.println("voteRequest.getId() : " + voteRequest.getId());
+        System.out.println("voteRequest.getVoteStatus() : " + voteRequest.getVoteStatus());
+
+
         puppyService.vote(voteRequest.getId(), voteRequest.getVoteStatus());
 
+        /*
+        Todo : 성공일 경우 응답값. data 값 빼고 줘야함
+        {
+            "status": 200,
+            "message": "강아지 투표 성공",
+            "data": ""
+        }
+        */
         return ResultResponse.toResponseEntity(ResultCode.PUPPY_VOTE_SUCCESS);
     }
 

@@ -1,8 +1,9 @@
 package com.deepdive.puppypopularvote.domain.db;
 
+import com.deepdive.puppypopularvote.code.Sex;
+import com.deepdive.puppypopularvote.code.VoteStatus;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import com.deepdive.puppypopularvote.code.Sex;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -53,6 +54,15 @@ public class Puppy extends BaseEntity {
         this.detailDescription = detailDescription;
         this.sex = sex;
         this.voteCount = voteCount;
+    }
+
+    public void vote(VoteStatus voteStatus) {
+        if (voteStatus == VoteStatus.VOTE) {
+            this.voteCount++;
+        }
+        if (voteStatus == VoteStatus.VOTE) {
+            this.voteCount--;
+        }
     }
 
 }

@@ -5,14 +5,15 @@ import com.deepdive.puppypopularvote.code.VoteStatus;
 import com.deepdive.puppypopularvote.domain.db.Puppy;
 import com.deepdive.puppypopularvote.domain.kafka.VoteTopic;
 import com.deepdive.puppypopularvote.domain.redis.RedisPuppyDetail;
-import com.deepdive.puppypopularvote.global.error.exception.KafkaVoteProduceFailException;
-import com.deepdive.puppypopularvote.global.error.exception.PuppyNotFoundException;
+import com.deepdive.puppypopularvote.error.exception.KafkaVoteProduceFailException;
+import com.deepdive.puppypopularvote.error.exception.PuppyNotFoundException;
 import com.deepdive.puppypopularvote.puppy.dto.PuppyDto;
-import com.deepdive.puppypopularvote.puppy.repository.db.PuppyRepository;
-import com.deepdive.puppypopularvote.puppy.repository.redis.RedisPuppyDetailRepository;
+import com.deepdive.puppypopularvote.repository.db.PuppyRepository;
+import com.deepdive.puppypopularvote.repository.redis.RedisPuppyDetailRepository;
 import com.deepdive.puppypopularvote.puppy.service.PuppyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -30,13 +31,16 @@ import java.util.concurrent.TimeoutException;
 @Service
 public class PuppyServiceImpl implements PuppyService {
 
-    private final static String KAFKA_TOPIC_VOTE = "vote";
-    private final static long KAFKA_TIMEOUT_SECONDS = 5;
-
     private final PuppyRepository puppyRepository;
     private final RedisPuppyDetailRepository redisPuppyDetailRepository;
     private final ModelMapper modelMapper;
     private final KafkaTemplate<String, VoteTopic> kafkaTemplate;
+
+    @Value("${properties.kafka.group-id}")
+    private String kafkaGroupId;
+
+    @Value("${properties.kafka.timeout-second}")
+    private long kafkaTimeoutSecond;
 
     @Override
     @Transactional(readOnly = true)
@@ -55,8 +59,7 @@ public class PuppyServiceImpl implements PuppyService {
             return modelMapper.map(redisPuppyDetailRepository.findById(id), PuppyDto.DetailResponse.class);
         }
 
-        Puppy puppy = puppyRepository.findById(id)
-                .orElseThrow(() -> new PuppyNotFoundException());
+        Puppy puppy = loadPuppy(id);
 
         savePuppyToRedisCache(puppy);
 
@@ -64,13 +67,19 @@ public class PuppyServiceImpl implements PuppyService {
     }
 
     @Override
-    @Async
-    public void vote(Long id, VoteStatus voteStatus) {
-        ListenableFuture<SendResult<String, VoteTopic>> kafkaFuture = kafkaTemplate.send(KAFKA_TOPIC_VOTE, VoteTopic.of(id, voteStatus));
+    @Transactional
+    // @Async
+    public void vote(final Long id, final VoteStatus voteStatus) {
+
+        System.out.println("### vote id : " + id);
+
+        loadPuppy(id);
+
+        ListenableFuture<SendResult<String, VoteTopic>> kafkaFuture = kafkaTemplate.send(kafkaGroupId, VoteTopic.of(id, voteStatus));
 
         // Todo : exception 별로 별도 처리. Log 등
         try {
-            kafkaFuture.get(KAFKA_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            kafkaFuture.get(kafkaTimeoutSecond, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new KafkaVoteProduceFailException();
         } catch (ExecutionException e) {
@@ -78,6 +87,12 @@ public class PuppyServiceImpl implements PuppyService {
         } catch (TimeoutException e) {
             throw new KafkaVoteProduceFailException();
         }
+    }
+
+    private Puppy loadPuppy (final Long id) {
+        System.out.println("### vote2 id : " + id);
+        return puppyRepository.findById(id)
+                .orElseThrow(() -> new PuppyNotFoundException());
     }
 
     private boolean hasPuppyInRedisCache(final Long id) {

@@ -1,6 +1,6 @@
 package com.deepdive.puppypopularvote.global.response;
 
-import com.deepdive.puppypopularvote.global.code.ErrorCode;
+import com.deepdive.puppypopularvote.error.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

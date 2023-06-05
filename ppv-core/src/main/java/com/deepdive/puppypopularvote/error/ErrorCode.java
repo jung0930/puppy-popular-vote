@@ -1,4 +1,4 @@
-package com.deepdive.puppypopularvote.global.code;
+package com.deepdive.puppypopularvote.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
